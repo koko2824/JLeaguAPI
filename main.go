@@ -5,6 +5,7 @@ import (
 	"github.com/PuerkitoBio/goquery"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"os"
 )
 
 type Team struct {
@@ -34,8 +35,8 @@ func main() {
 		r := gin.Default()
 		r.GET("/", func(c *gin.Context) {
 			c.JSON(http.StatusOK, gin.H{
-				"messsage": getDoc(),
+				"ranking": getDoc(),
 			})
 		})
-		r.Run("localhost:8080")
+		r.Run(":"+os.Getenv("PORT"))
 }
