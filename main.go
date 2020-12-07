@@ -1,22 +1,22 @@
 package main
 
 import (
-	"fmt"
 	"github.com/PuerkitoBio/goquery"
 	"github.com/gin-gonic/gin"
+	"log"
 	"net/http"
 	"os"
 )
 
 type Team struct {
-	Rank     int    `json:id`
+	Rank     int    `json:rank`
 	TeamName string `json:"team_name"`
 }
 
 func getDoc() []Team {
 	doc, err := goquery.NewDocument("https://www.jleague.jp/standings/j1/")
 	if err != nil {
-		fmt.Println(err)
+		log.Fatal(err)
 	}
 
 	var teams []Team
@@ -32,11 +32,11 @@ func getDoc() []Team {
 }
 
 func main() {
-		r := gin.Default()
-		r.GET("/", func(c *gin.Context) {
-			c.JSON(http.StatusOK, gin.H{
-				"ranking": getDoc(),
-			})
+	r := gin.Default()
+	r.GET("/", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{
+			"ranking": getDoc(),
 		})
-		r.Run(":"+os.Getenv("PORT"))
+	})
+	r.Run(":" + os.Getenv("PORT"))
 }
