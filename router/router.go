@@ -2,13 +2,13 @@ package router
 
 import (
 	"github.com/gin-gonic/gin"
+	"os"
 	"scraping/controller"
 )
 
 func Init() {
 	r := router()
-	//r.Run(":" + os.Getenv("PORT"))
-	r.Run("localhost:8080")
+	r.Run(":" + os.Getenv("PORT"))
 }
 
 func router() *gin.Engine {
