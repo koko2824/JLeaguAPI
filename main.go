@@ -1,42 +1,7 @@
 package main
 
-import (
-	"github.com/PuerkitoBio/goquery"
-	"github.com/gin-gonic/gin"
-	"log"
-	"net/http"
-	"os"
-)
-
-type Team struct {
-	Rank     int    `json:rank`
-	TeamName string `json:"team_name"`
-}
-
-func getDoc() []Team {
-	doc, err := goquery.NewDocument("https://www.jleague.jp/standings/j1/")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	var teams []Team
-	doc.Find(" td.tdTeam > a").Each(func(i int, s *goquery.Selection) {
-		name := s.Find("span").Text()
-		team := Team{
-			Rank:     i + 1,
-			TeamName: name,
-		}
-		teams = append(teams, team)
-	})
-	return teams
-}
+import "scraping/router"
 
 func main() {
-	r := gin.Default()
-	r.GET("/", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{
-			"ranking": getDoc(),
-		})
-	})
-	r.Run(":" + os.Getenv("PORT"))
+	router.Init()
 }
