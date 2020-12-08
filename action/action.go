@@ -9,7 +9,7 @@ type TeamData struct {
 	Rank           string `json:"rank"`
 	Points         string `json:"points"`
 	MatchPlayed    string `json:"match_played"`
-	Wim            string `json:"wim"`
+	Win           string `json:"win"`
 	Draw           string `json:"draw"`
 	Lose           string `json:"lose"`
 	GoalScored     string `json:"goal_scored"`
@@ -35,7 +35,7 @@ func Ranking() ([]TeamData, error) {
 			case 2 : team.TeamName = v.Find("span.dsktp").Text()
 			case 3 : team.Points = v.Text()
 			case 4 : team.MatchPlayed = v.Text()
-			case 5 : team.Wim = v.Text()
+			case 5 : team.Win = v.Text()
 			case 6 : team.Draw = v.Text()
 			case 7 : team.Lose = v.Text()
 			case 8 : team.GoalScored = v.Text()
