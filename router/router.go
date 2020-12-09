@@ -14,6 +14,7 @@ func Init() {
 func router() *gin.Engine {
 	r := gin.Default()
 	ctrl := controller.Controller{}
-	r.GET("/", ctrl.Ranking)
+	r.GET("/:year", ctrl.Ranking)
+	r.GET("/:year/:teamName", ctrl.TeamDetail)
 	return r
 }

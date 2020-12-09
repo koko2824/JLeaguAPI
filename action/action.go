@@ -1,7 +1,9 @@
 package action
 
 import (
+	"errors"
 	"github.com/PuerkitoBio/goquery"
+	"strconv"
 )
 
 type TeamData struct {
@@ -9,7 +11,7 @@ type TeamData struct {
 	Rank           string `json:"rank"`
 	Points         string `json:"points"`
 	MatchPlayed    string `json:"match_played"`
-	Win           string `json:"win"`
+	Win            string `json:"win"`
 	Draw           string `json:"draw"`
 	Lose           string `json:"lose"`
 	GoalScored     string `json:"goal_scored"`
@@ -19,9 +21,15 @@ type TeamData struct {
 	ConcededAve    string `json:"conceded_ave"`
 }
 
-func Ranking() ([]TeamData, error) {
+func getData(year string) ([]TeamData, error) {
 	var teams []TeamData
-	doc, err:= goquery.NewDocument("https://www.football-lab.jp/summary/team_ranking/j1/?year=2020")
+	i, err := strconv.Atoi(year)
+	if i <= 2011 {
+		return nil, errors.New("データが対応していません")
+	}
+
+	url := "https://www.football-lab.jp/summary/team_ranking/j1/?year=" + year
+	doc, err := goquery.NewDocument(url)
 	if err != nil {
 		return nil, err
 	}
@@ -30,22 +38,53 @@ func Ranking() ([]TeamData, error) {
 		var team TeamData
 		s.Find("td").Each(func(i int, v *goquery.Selection) {
 			switch i {
-			case 0 : team.Rank = v.Text()
-			case 1 : return //チームエンブレム
-			case 2 : team.TeamName = v.Find("span.dsktp").Text()
-			case 3 : team.Points = v.Text()
-			case 4 : team.MatchPlayed = v.Text()
-			case 5 : team.Win = v.Text()
-			case 6 : team.Draw = v.Text()
-			case 7 : team.Lose = v.Text()
-			case 8 : team.GoalScored = v.Text()
-			case 9 : team.GoalConceded = v.Text()
-			case 10: team.GoalDifference = v.Text()
-			case 11: team.GoalAve = v.Text()
-			case 12: team.ConcededAve = v.Text()
+			case 0:
+				team.Rank = v.Text()
+			case 1:
+				return //チームエンブレム
+			case 2:
+				team.TeamName = v.Find("span.dsktp").Text()
+			case 3:
+				team.Points = v.Text()
+			case 4:
+				team.MatchPlayed = v.Text()
+			case 5:
+				team.Win = v.Text()
+			case 6:
+				team.Draw = v.Text()
+			case 7:
+				team.Lose = v.Text()
+			case 8:
+				team.GoalScored = v.Text()
+			case 9:
+				team.GoalConceded = v.Text()
+			case 10:
+				team.GoalDifference = v.Text()
+			case 11:
+				team.GoalAve = v.Text()
+			case 12:
+				team.ConcededAve = v.Text()
 			}
 		})
 		teams = append(teams, team)
 	})
 	return teams, err
+}
+
+func Ranking(year string) ([]TeamData, error) {
+	return getData(year)
+}
+
+func TeamDetail(n string, year string) (TeamData, error) {
+	teams, err := getData(year)
+	if err != nil {
+		return TeamData{}, err
+	}
+
+	for i := 0; i < len(teams); i++ {
+		if teams[i].TeamName == n {
+			return teams[i], err
+		}
+	}
+	return TeamData{}, err
 }
