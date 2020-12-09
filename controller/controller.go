@@ -10,6 +10,9 @@ type Controller struct{}
 
 func (Controller) Ranking(c *gin.Context) {
 	year := c.Param("year")
+	if year == "" {
+		year = "2020"
+	}
 	ranking, err := action.Ranking(year)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"Error": err.Error()})
