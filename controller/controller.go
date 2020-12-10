@@ -9,11 +9,16 @@ import (
 type Controller struct{}
 
 func (Controller) Ranking(c *gin.Context) {
-	year := c.Param("year")
+	league := c.Query("league")
+	year := c.Query("year")
+	if league == ""{
+		league = "j1"
+	}
 	if year == "" {
 		year = "2020"
 	}
-	ranking, err := action.Ranking(year)
+
+	ranking, err := action.Ranking(league,year)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"Error": err.Error()})
 		return
@@ -26,7 +31,8 @@ func (Controller) Ranking(c *gin.Context) {
 
 func (Controller) TeamDetail(c *gin.Context) {
 	year := c.Param("year")
-	team, err := action.TeamDetail(c.Param("teamName"), year)
+	league := c.Param("league")
+	team, err := action.TeamDetail(league, year, c.Param("teamName"))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"Error": err.Error()})
 		return

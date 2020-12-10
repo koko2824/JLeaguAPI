@@ -21,14 +21,14 @@ type TeamData struct {
 	ConcededAve    string `json:"conceded_ave"`
 }
 
-func getData(year string) ([]TeamData, error) {
+func getData(league string, year string) ([]TeamData, error) {
 	var teams []TeamData
 	i, err := strconv.Atoi(year)
 	if i <= 2011 {
 		return nil, errors.New("データが対応していません")
 	}
 
-	url := "https://www.football-lab.jp/summary/team_ranking/j1/?year=" + year
+	url := "https://www.football-lab.jp/summary/team_ranking/" + league + "/?year=" + year
 	doc, err := goquery.NewDocument(url)
 	if err != nil {
 		return nil, err
@@ -71,12 +71,12 @@ func getData(year string) ([]TeamData, error) {
 	return teams, err
 }
 
-func Ranking(year string) ([]TeamData, error) {
-	return getData(year)
+func Ranking(league string ,year string) ([]TeamData, error) {
+	return getData(league, year)
 }
 
-func TeamDetail(n string, year string) (TeamData, error) {
-	teams, err := getData(year)
+func TeamDetail(league string, year string, n string) (TeamData, error) {
+	teams, err := getData(league, year)
 	if err != nil {
 		return TeamData{}, err
 	}
