@@ -42,3 +42,22 @@ func (Controller) TeamDetail(c *gin.Context) {
 		"teamData": team,
 	})
 }
+
+func (Controller) ScoreDifference(c *gin.Context) {
+	year := c.Query("year")
+	league := c.Query("league")
+	team1Name := c.Query("team1")
+	team2Name := c.Query("team2")
+
+	team1, team2, difference , err := action.ScoreDifference(year, league, team1Name, team2Name)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{ "Error": err })
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"team1_data": team1,
+		"team2_data": team2,
+		"score_difference": difference,
+	})
+}

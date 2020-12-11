@@ -71,7 +71,7 @@ func getData(league string, year string) ([]TeamData, error) {
 	return teams, err
 }
 
-func Ranking(league string ,year string) ([]TeamData, error) {
+func Ranking(league string, year string) ([]TeamData, error) {
 	return getData(league, year)
 }
 
@@ -87,4 +87,28 @@ func TeamDetail(league string, year string, n string) (TeamData, error) {
 		}
 	}
 	return TeamData{}, err
+}
+
+func ScoreDifference(league string, year string, team1Name string, team2Name string ) (TeamData, TeamData, int, error) {
+	teams, err := getData(league, year)
+	if err != nil {
+		return TeamData{}, TeamData{}, 0, err
+	}
+
+	var team1 TeamData
+	var team2 TeamData
+
+	for i := 0; i < len(teams); i++ {
+		if teams[i].TeamName == team1Name {
+			team1 = teams[i]
+		}
+		if teams[i].TeamName == team2Name {
+			team2 = teams[i]
+		}
+	}
+
+	team1Point, err := strconv.Atoi(team1.Points)
+	team2Point, err := strconv.Atoi(team2.Points)
+
+	return team1, team2, team1Point - team2Point, nil
 }

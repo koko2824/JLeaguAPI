@@ -15,5 +15,6 @@ func router() *gin.Engine {
 	r := gin.Default()
 	ctrl := controller.Controller{}
 	r.GET("/", ctrl.Ranking)
+	r.GET("/difference", ctrl.ScoreDifference)
 	return r
 }
