@@ -11,14 +11,14 @@ type Controller struct{}
 func (Controller) Ranking(c *gin.Context) {
 	league := c.Query("league")
 	year := c.Query("year")
-	if league == ""{
+	if league == "" {
 		league = "j1"
 	}
 	if year == "" {
 		year = "2020"
 	}
 
-	ranking, err := action.Ranking(league,year)
+	ranking, err := action.Ranking(league, year)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"Error": err.Error()})
 		return
@@ -49,15 +49,15 @@ func (Controller) ScoreDifference(c *gin.Context) {
 	team1Name := c.Query("team1")
 	team2Name := c.Query("team2")
 
-	team1, team2, difference , err := action.ScoreDifference(year, league, team1Name, team2Name)
+	team1, team2, difference, err := action.ScoreDifference(league, year, team1Name, team2Name)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{ "Error": err })
+		c.JSON(http.StatusBadRequest, gin.H{"Error": err.Error()})
 		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"team1_data": team1,
-		"team2_data": team2,
+		"team1_data":       team1,
+		"team2_data":       team2,
 		"score_difference": difference,
 	})
 }

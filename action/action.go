@@ -89,7 +89,7 @@ func TeamDetail(league string, year string, n string) (TeamData, error) {
 	return TeamData{}, err
 }
 
-func ScoreDifference(league string, year string, team1Name string, team2Name string ) (TeamData, TeamData, int, error) {
+func ScoreDifference(league string, year string, team1Name string, team2Name string) (TeamData, TeamData, int, error) {
 	teams, err := getData(league, year)
 	if err != nil {
 		return TeamData{}, TeamData{}, 0, err
